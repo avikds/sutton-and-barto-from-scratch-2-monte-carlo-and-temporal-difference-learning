@@ -325,8 +325,41 @@ def off_policy_blackjack_returns(n_episodes, rng):
 
     return returns, ratios
 
-# Step 11 - infinite_variance_returns (not yet solved)
-# TODO: implement
+# Step 11 - infinite_variance_returns
+def infinite_variance_returns(n_episodes, rng):
+    # Initialize arrays for episode returns and importance-sampling ratios.
+    returns = np.zeros(n_episodes, dtype=float)
+    ratios = np.zeros(n_episodes, dtype=float)
+
+    for i in range(n_episodes):
+        n_left = 0
+
+        while True:
+            # Choose an action uniformly at random:
+            # 0 = left, 1 = right.
+            action = int(rng.integers(0, 2))
+
+            # Choosing right terminates the episode with reward 0.
+            if action == 1:
+                returns[i] = 0.0
+                ratios[i] = 0.0
+                break
+
+            # Choosing left returns to the same state or terminates
+            # successfully with probability 0.1.
+            n_left += 1
+
+            if rng.random() < 0.1:
+                returns[i] = 1.0
+
+                # The target always chooses left, while the behaviour
+                # policy chooses left with probability 0.5.
+                ratios[i] = 2.0 ** n_left
+                break
+
+            # Otherwise, continue the episode in the same state.
+
+    return returns, ratios
 
 # Step 12 - random_walk_episode (not yet solved)
 # TODO: implement
