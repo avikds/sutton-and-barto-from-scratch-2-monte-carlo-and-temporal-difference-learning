@@ -613,8 +613,52 @@ def q_learning_cliff(n_episodes, alpha, epsilon, rng):
 
     return q_table, episode_rewards
 
-# Step 20 - expected_sarsa_cliff (not yet solved)
-# TODO: implement
+# Step 20 - expected_sarsa_cliff
+def expected_sarsa_cliff(n_episodes, alpha, epsilon, rng):
+    # Initialize the action-value table and episode reward array.
+    q_table = np.zeros((48, 4), dtype=float)
+    episode_rewards = np.zeros(n_episodes, dtype=float)
+
+    for episode_idx in range(n_episodes):
+        # Start each episode at state 36 (bottom-left).
+        state = 36
+        done = False
+        total_reward = 0.0
+
+        while not done:
+            # Select an action using epsilon-greedy exploration.
+            action = epsilon_soft_action(q_table[state], epsilon, rng)
+
+            # Execute the action and observe the transition.
+            next_state, reward, done = cliff_step(state, action)
+            total_reward += reward
+
+            if done:
+                # Terminal target contains only the immediate reward.
+                target = reward
+            else:
+                # Expected next-state action value under epsilon-greedy:
+                # epsilon * mean(Q) + (1 - epsilon) * max(Q).
+                next_q_values = q_table[next_state]
+                expected_next_value = (
+                    epsilon * np.mean(next_q_values)
+                    + (1.0 - epsilon) * np.max(next_q_values)
+                )
+
+                target = reward + expected_next_value
+
+            # Apply the Expected Sarsa update with gamma = 1.
+            q_table[state, action] += alpha * (
+                target - q_table[state, action]
+            )
+
+            # Advance to the next state.
+            state = next_state
+
+        # Store the total reward accumulated in this episode.
+        episode_rewards[episode_idx] = total_reward
+
+    return q_table, episode_rewards
 
 # Step 21 - double_q_update (not yet solved)
 # TODO: implement
