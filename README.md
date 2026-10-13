@@ -14,7 +14,7 @@ python scaffold.py
 - [x] **2.** hand_value
 - [x] **3.** blackjack_step
 - [x] **4.** play_blackjack_episode
-- [ ] **5.** episode_returns
+- [x] **5.** episode_returns
 - [ ] **6.** mc_prediction_blackjack
 - [ ] **7.** epsilon_soft_action
 - [ ] **8.** mc_control_epsilon_soft

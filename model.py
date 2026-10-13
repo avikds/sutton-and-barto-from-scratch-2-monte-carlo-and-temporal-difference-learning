@@ -106,8 +106,24 @@ def play_blackjack_episode(policy, rng, player_cards=None, dealer_cards=None):
 
     return episode
 
-# Step 5 - episode_returns (not yet solved)
-# TODO: implement
+# Step 5 - episode_returns
+import numpy as np
+
+def episode_returns(rewards, gamma=1.0):
+    # Convert rewards to a sequence of floating-point values.
+    rewards = np.asarray(rewards, dtype=float)
+
+    # Initialize an array to store the discounted returns.
+    T = len(rewards)
+    returns = np.empty(T, dtype=float)
+
+    # Compute returns using a single backward pass.
+    G = 0.0
+    for t in range(T - 1, -1, -1):
+        G = float(rewards[t]) + gamma * G
+        returns[t] = G
+
+    return returns
 
 # Step 6 - mc_prediction_blackjack (not yet solved)
 # TODO: implement
