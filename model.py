@@ -64,8 +64,47 @@ def blackjack_step(player_cards, dealer_cards, action, rng):
     # Sticking ends the episode.
     return player_cards, dealer_cards, float(reward), True
 
-# Step 4 - play_blackjack_episode (not yet solved)
-# TODO: implement
+# Step 4 - play_blackjack_episode
+def play_blackjack_episode(policy, rng, player_cards=None, dealer_cards=None):
+    # Deal the player's initial two cards if no hand is provided.
+    if player_cards is None:
+        player_cards = [draw_card(rng), draw_card(rng)]
+    else:
+        # Copy the provided hand to avoid modifying the input list.
+        player_cards = list(player_cards)
+
+    # Automatically hit until the player's hand value is at least 12.
+    while hand_value(player_cards)[0] < 12:
+        player_cards.append(draw_card(rng))
+
+    # Deal the dealer's initial two cards if no hand is provided.
+    if dealer_cards is None:
+        dealer_cards = [draw_card(rng), draw_card(rng)]
+    else:
+        # Copy the provided hand to avoid modifying the input list.
+        dealer_cards = list(dealer_cards)
+
+    # Record each step as (state, action, reward).
+    episode = []
+    done = False
+
+    while not done:
+        # Construct the state before the player takes an action.
+        player_total, usable_ace = hand_value(player_cards)
+        state = (int(player_total), int(dealer_cards[0]), bool(usable_ace))
+
+        # Select the player's action using the supplied policy.
+        action = policy(state, rng)
+
+        # Apply the action and obtain the updated hands and outcome.
+        player_cards, dealer_cards, reward, done = blackjack_step(
+            player_cards, dealer_cards, action, rng
+        )
+
+        # Store the state, action, and immediate reward.
+        episode.append((state, action, float(reward)))
+
+    return episode
 
 # Step 5 - episode_returns (not yet solved)
 # TODO: implement
