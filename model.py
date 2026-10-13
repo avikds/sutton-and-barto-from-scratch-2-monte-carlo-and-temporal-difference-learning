@@ -69,19 +69,19 @@ def play_blackjack_episode(policy, rng, player_cards=None, dealer_cards=None):
     # Deal the player's initial two cards if no hand is provided.
     if player_cards is None:
         player_cards = [draw_card(rng), draw_card(rng)]
-    else:
-        # Copy the provided hand to avoid modifying the input list.
-        player_cards = list(player_cards)
 
-    # Automatically hit until the player's hand value is at least 12.
-    while hand_value(player_cards)[0] < 12:
-        player_cards.append(draw_card(rng))
+        # Automatically hit until the player's hand value is at least 12.
+        while hand_value(player_cards)[0] < 12:
+            player_cards.append(draw_card(rng))
+    else:
+        # Copy the provided hand without modifying the input list.
+        player_cards = list(player_cards)
 
     # Deal the dealer's initial two cards if no hand is provided.
     if dealer_cards is None:
         dealer_cards = [draw_card(rng), draw_card(rng)]
     else:
-        # Copy the provided hand to avoid modifying the input list.
+        # Copy the provided hand without modifying the input list.
         dealer_cards = list(dealer_cards)
 
     # Record each step as (state, action, reward).
