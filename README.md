@@ -19,7 +19,7 @@ python scaffold.py
 - [x] **7.** epsilon_soft_action
 - [x] **8.** mc_control_epsilon_soft
 - [x] **9.** importance_sampling_estimates
-- [ ] **10.** off_policy_blackjack_returns
+- [x] **10.** off_policy_blackjack_returns
 - [ ] **11.** infinite_variance_returns
 - [ ] **12.** random_walk_episode
 - [ ] **13.** td0_update

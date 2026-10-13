@@ -278,8 +278,52 @@ def importance_sampling_estimates(returns, ratios):
 
     return ordinary.astype(float), weighted.astype(float)
 
-# Step 10 - off_policy_blackjack_returns (not yet solved)
-# TODO: implement
+# Step 10 - off_policy_blackjack_returns
+def off_policy_blackjack_returns(n_episodes, rng):
+    # Initialize arrays for episode returns and importance-sampling ratios.
+    returns = np.zeros(n_episodes, dtype=float)
+    ratios = np.zeros(n_episodes, dtype=float)
+
+    for i in range(n_episodes):
+        # Deal the dealer's showing card and hole card.
+        dealer_cards = [2, draw_card(rng)]
+
+        # Behaviour policy: choose stick (0) or hit (1) uniformly at random.
+        def behaviour_policy(state, r):
+            return int(r.integers(0, 2))
+
+        # Start from player state (13, 2, usable ace).
+        episode = play_blackjack_episode(
+            behaviour_policy,
+            rng,
+            player_cards=[1, 2],
+            dealer_cards=dealer_cards
+        )
+
+        # The episode return is the final reward.
+        returns[i] = float(episode[-1][2])
+
+        # The importance ratio is nonzero only if every action agrees
+        # with the deterministic target policy.
+        matches_target = True
+
+        for state, action, reward in episode:
+            player_sum = state[0]
+
+            # Target policy: stick at 20 or 21; hit otherwise.
+            target_action = 0 if player_sum in (20, 21) else 1
+
+            if action != target_action:
+                matches_target = False
+                break
+
+        # Each matching action contributes pi(a|s) / b(a|s) = 1 / 0.5 = 2.
+        if matches_target:
+            ratios[i] = 2.0 ** len(episode)
+        else:
+            ratios[i] = 0.0
+
+    return returns, ratios
 
 # Step 11 - infinite_variance_returns (not yet solved)
 # TODO: implement
