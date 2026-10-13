@@ -361,8 +361,31 @@ def infinite_variance_returns(n_episodes, rng):
 
     return returns, ratios
 
-# Step 12 - random_walk_episode (not yet solved)
-# TODO: implement
+# Step 12 - random_walk_episode
+def random_walk_episode(rng):
+    # Start at the center state C (state 3).
+    state = 3
+    episode = []
+
+    # Continue until reaching either terminal state 0 or 6.
+    while state not in (0, 6):
+        # Move right with probability 0.5; otherwise, move left.
+        u = rng.random()
+        if u < 0.5:
+            next_state = state + 1
+        else:
+            next_state = state - 1
+
+        # Reward is 1.0 only when entering terminal state 6.
+        reward = 1.0 if next_state == 6 else 0.0
+
+        # Record the transition as (state, reward, next_state).
+        episode.append((state, float(reward), next_state))
+
+        # Advance to the next state.
+        state = next_state
+
+    return episode
 
 # Step 13 - td0_update (not yet solved)
 # TODO: implement

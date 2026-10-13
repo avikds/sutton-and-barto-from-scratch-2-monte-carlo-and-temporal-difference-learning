@@ -21,7 +21,7 @@ python scaffold.py
 - [x] **9.** importance_sampling_estimates
 - [x] **10.** off_policy_blackjack_returns
 - [x] **11.** infinite_variance_returns
-- [ ] **12.** random_walk_episode
+- [x] **12.** random_walk_episode
 - [ ] **13.** td0_update
 - [ ] **14.** constant_alpha_mc_update
 - [ ] **15.** random_walk_rms_curve
