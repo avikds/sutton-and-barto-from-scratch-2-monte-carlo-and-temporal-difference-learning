@@ -17,7 +17,7 @@ python scaffold.py
 - [x] **5.** episode_returns
 - [x] **6.** mc_prediction_blackjack
 - [x] **7.** epsilon_soft_action
-- [ ] **8.** mc_control_epsilon_soft
+- [x] **8.** mc_control_epsilon_soft
 - [ ] **9.** importance_sampling_estimates
 - [ ] **10.** off_policy_blackjack_returns
 - [ ] **11.** infinite_variance_returns

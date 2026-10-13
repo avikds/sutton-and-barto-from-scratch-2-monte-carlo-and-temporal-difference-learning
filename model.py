@@ -187,8 +187,69 @@ def epsilon_soft_action(q_values, epsilon, rng):
     # np.argmax selects the smallest index when values are tied.
     return int(np.argmax(q_values))
 
-# Step 8 - mc_control_epsilon_soft (not yet solved)
-# TODO: implement
+# Step 8 - mc_control_epsilon_soft
+def mc_control_epsilon_soft(n_episodes, epsilon, rng):
+    # Initialize action-value and visit-count tables.
+    # Indices: [player_sum - 12, dealer_showing - 1, usable_ace, action]
+    q_table = np.zeros((10, 10, 2, 2), dtype=float)
+    counts = np.zeros((10, 10, 2, 2), dtype=float)
+
+    # Run the required number of episodes.
+    for _ in range(n_episodes):
+
+        # Select actions using the current, continuously updated Q-table.
+        def policy(state, r):
+            player_sum, dealer_showing, usable_ace = state
+
+            index = (
+                player_sum - 12,
+                dealer_showing - 1,
+                int(usable_ace)
+            )
+
+            return epsilon_soft_action(q_table[index], epsilon, r)
+
+        # Generate an episode using the current epsilon-soft policy.
+        episode = play_blackjack_episode(policy, rng)
+
+        # Compute undiscounted returns for every time step.
+        rewards = [transition[2] for transition in episode]
+        returns = episode_returns(rewards, gamma=1.0)
+
+        # Track state-action pairs already encountered in this episode.
+        visited = set()
+
+        # Apply first-visit Monte Carlo updates.
+        for t, (state, action, reward) in enumerate(episode):
+            player_sum, dealer_showing, usable_ace = state
+
+            index = (
+                player_sum - 12,
+                dealer_showing - 1,
+                int(usable_ace)
+            )
+
+            action = int(action)
+            state_action = (state, action)
+
+            # Skip repeated occurrences of the same state-action pair.
+            if state_action in visited:
+                continue
+
+            visited.add(state_action)
+
+            # Update the visit count and action-value estimate.
+            q_index = index + (action,)
+            counts[q_index] += 1.0
+
+            q_table[q_index] += (
+                returns[t] - q_table[q_index]
+            ) / counts[q_index]
+
+    # Derive the greedy policy from the learned action values.
+    policy = np.argmax(q_table, axis=3).astype(int)
+
+    return q_table, policy
 
 # Step 9 - importance_sampling_estimates (not yet solved)
 # TODO: implement
