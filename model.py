@@ -251,8 +251,32 @@ def mc_control_epsilon_soft(n_episodes, epsilon, rng):
 
     return q_table, policy
 
-# Step 9 - importance_sampling_estimates (not yet solved)
-# TODO: implement
+# Step 9 - importance_sampling_estimates
+def importance_sampling_estimates(returns, ratios):
+    # Convert inputs to NumPy float arrays without modifying the originals.
+    returns = np.asarray(returns, dtype=float)
+    ratios = np.asarray(ratios, dtype=float)
+
+    # Compute cumulative weighted returns and cumulative importance ratios.
+    weighted_returns = np.cumsum(ratios * returns)
+    cumulative_ratios = np.cumsum(ratios)
+
+    n = len(returns)
+
+    # Ordinary importance sampling: divide by the number of samples.
+    ordinary = weighted_returns / np.arange(1, n + 1, dtype=float)
+
+    # Weighted importance sampling: divide by cumulative ratios.
+    # Return 0.0 wherever the cumulative ratio sum is zero.
+    weighted = np.zeros(n, dtype=float)
+    np.divide(
+        weighted_returns,
+        cumulative_ratios,
+        out=weighted,
+        where=(cumulative_ratios != 0)
+    )
+
+    return ordinary.astype(float), weighted.astype(float)
 
 # Step 10 - off_policy_blackjack_returns (not yet solved)
 # TODO: implement
