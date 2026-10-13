@@ -468,8 +468,36 @@ def random_walk_rms_curve(method, alpha, n_episodes, n_runs, rng):
 
     return rms_curve
 
-# Step 16 - batch_td_prediction (not yet solved)
-# TODO: implement
+# Step 16 - batch_td_prediction
+def batch_td_prediction(episodes, alpha, theta, gamma=1.0):
+    # Initialize the value table with zeros for states 0 through 6.
+    values = np.zeros(7, dtype=float)
+
+    while True:
+        # Accumulate all TD updates using the values frozen at the
+        # beginning of this sweep.
+        increments = np.zeros(7, dtype=float)
+
+        for episode in episodes:
+            for state, reward, next_state in episode:
+                # Calculate the TD error using the current value table.
+                td_error = (
+                    reward
+                    + gamma * values[next_state]
+                    - values[state]
+                )
+
+                # Accumulate the update without changing values yet.
+                increments[state] += alpha * td_error
+
+        # Apply all accumulated updates simultaneously.
+        values += increments
+
+        # Stop when the largest absolute accumulated update is below theta.
+        if np.max(np.abs(increments)) < theta:
+            break
+
+    return values
 
 # Step 17 - cliff_step (not yet solved)
 # TODO: implement

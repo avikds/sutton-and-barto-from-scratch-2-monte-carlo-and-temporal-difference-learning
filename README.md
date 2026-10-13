@@ -25,7 +25,7 @@ python scaffold.py
 - [x] **13.** td0_update
 - [x] **14.** constant_alpha_mc_update
 - [x] **15.** random_walk_rms_curve
-- [ ] **16.** batch_td_prediction
+- [x] **16.** batch_td_prediction
 - [ ] **17.** cliff_step
 - [ ] **18.** sarsa_cliff
 - [ ] **19.** q_learning_cliff
