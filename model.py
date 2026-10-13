@@ -691,6 +691,78 @@ def double_q_update(q1, q2, state, action, reward, next_state, done, alpha, rng)
 
     return q1, q2
 
-# Step 22 - maximization_bias_experiment (not yet solved)
-# TODO: implement
+# Step 22 - maximization_bias_experiment
+def maximization_bias_experiment(n_runs, n_episodes, alpha, epsilon, rng, double=True):
+    # Count how many runs choose left in state A during each episode.
+    left_counts = np.zeros(n_episodes, dtype=float)
+
+    for _ in range(n_runs):
+        # Initialize the two action-value tables for this run.
+        q1 = np.zeros((2, 10), dtype=float)
+        q2 = np.zeros((2, 10), dtype=float)
+
+        for episode_idx in range(n_episodes):
+            # Each episode starts in state A (state 0).
+            state = 0
+            done = False
+            chose_left = False
+
+            while not done:
+                # Select actions from the valid action values in the current state.
+                if double:
+                    action_values = q1[state] + q2[state]
+                else:
+                    action_values = q1[state]
+
+                # State A has two actions; state B has ten.
+                n_actions = 2 if state == 0 else 10
+                action = epsilon_soft_action(
+                    action_values[:n_actions], epsilon, rng
+                )
+
+                # Execute the environment transition.
+                if state == 0:
+                    # Action 0 goes left to B; action 1 goes right to terminal.
+                    if action == 0:
+                        next_state = 1
+                        reward = 0.0
+                        chose_left = True
+                    else:
+                        next_state = 2
+                        reward = 0.0
+                        done = True
+                else:
+                    # In state B, every action terminates with a noisy reward.
+                    next_state = 2
+                    reward = float(rng.normal(-0.1, 1.0))
+                    done = True
+
+                # Update the appropriate action-value estimate.
+                if double:
+                    q1, q2 = double_q_update(
+                        q1, q2, state, action, reward,
+                        next_state, done, alpha, rng
+                    )
+                else:
+                    # Standard Q-learning update.
+                    if done:
+                        target = reward
+                    else:
+                        target = reward + np.max(q1[next_state])
+
+                    q1[state, action] += alpha * (
+                        target - q1[state, action]
+                    )
+
+                state = next_state
+
+            # Record whether this run chose left in state A.
+            if chose_left:
+                left_counts[episode_idx] += 1.0
+
+    # Return the fraction of runs that chose left in each episode.
+    if n_runs > 0:
+        left_counts /= n_runs
+
+    return left_counts
 
