@@ -30,7 +30,7 @@ python scaffold.py
 - [x] **18.** sarsa_cliff
 - [x] **19.** q_learning_cliff
 - [x] **20.** expected_sarsa_cliff
-- [ ] **21.** double_q_update
+- [x] **21.** double_q_update
 - [ ] **22.** maximization_bias_experiment
 
 ---

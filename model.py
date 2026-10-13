@@ -660,8 +660,36 @@ def expected_sarsa_cliff(n_episodes, alpha, epsilon, rng):
 
     return q_table, episode_rewards
 
-# Step 21 - double_q_update (not yet solved)
-# TODO: implement
+# Step 21 - double_q_update
+def double_q_update(q1, q2, state, action, reward, next_state, done, alpha, rng):
+    # Copy both tables so the input arrays are never modified.
+    q1 = np.array(q1, dtype=float, copy=True)
+    q2 = np.array(q2, dtype=float, copy=True)
+
+    # Randomly choose which action-value table to update.
+    if rng.random() < 0.5:
+        # Update Q1, selecting the next action using Q1.
+        if done:
+            target = reward
+        else:
+            next_action = int(np.argmax(q1[next_state]))
+            target = reward + q2[next_state, next_action]
+
+        # Apply the update only to Q1.
+        q1[state, action] += alpha * (target - q1[state, action])
+
+    else:
+        # Update Q2, selecting the next action using Q2.
+        if done:
+            target = reward
+        else:
+            next_action = int(np.argmax(q2[next_state]))
+            target = reward + q1[next_state, next_action]
+
+        # Apply the update only to Q2.
+        q2[state, action] += alpha * (target - q2[state, action])
+
+    return q1, q2
 
 # Step 22 - maximization_bias_experiment (not yet solved)
 # TODO: implement
