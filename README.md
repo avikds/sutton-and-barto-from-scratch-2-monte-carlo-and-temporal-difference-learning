@@ -28,7 +28,7 @@ python scaffold.py
 - [x] **16.** batch_td_prediction
 - [x] **17.** cliff_step
 - [x] **18.** sarsa_cliff
-- [ ] **19.** q_learning_cliff
+- [x] **19.** q_learning_cliff
 - [ ] **20.** expected_sarsa_cliff
 - [ ] **21.** double_q_update
 - [ ] **22.** maximization_bias_experiment

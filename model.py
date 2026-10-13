@@ -574,8 +574,44 @@ def sarsa_cliff(n_episodes, alpha, epsilon, rng):
 
     return q_table, episode_rewards
 
-# Step 19 - q_learning_cliff (not yet solved)
-# TODO: implement
+# Step 19 - q_learning_cliff
+def q_learning_cliff(n_episodes, alpha, epsilon, rng):
+    # Initialize the action-value table and episode reward array.
+    q_table = np.zeros((48, 4), dtype=float)
+    episode_rewards = np.zeros(n_episodes, dtype=float)
+
+    for episode_idx in range(n_episodes):
+        # Start each episode at state 36 (bottom-left).
+        state = 36
+        done = False
+        total_reward = 0.0
+
+        while not done:
+            # Select an action using epsilon-greedy exploration.
+            action = epsilon_soft_action(q_table[state], epsilon, rng)
+
+            # Execute the action in the cliff-walking environment.
+            next_state, reward, done = cliff_step(state, action)
+            total_reward += reward
+
+            # Calculate the Q-learning target.
+            if done:
+                target = reward
+            else:
+                target = reward + np.max(q_table[next_state])
+
+            # Update the current state-action value.
+            q_table[state, action] += alpha * (
+                target - q_table[state, action]
+            )
+
+            # Move to the next state.
+            state = next_state
+
+        # Record the total reward for this episode.
+        episode_rewards[episode_idx] = total_reward
+
+    return q_table, episode_rewards
 
 # Step 20 - expected_sarsa_cliff (not yet solved)
 # TODO: implement
