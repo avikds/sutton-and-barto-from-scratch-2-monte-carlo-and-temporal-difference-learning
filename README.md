@@ -11,7 +11,7 @@ python scaffold.py
 ## Steps
 
 - [x] **1.** draw_card
-- [ ] **2.** hand_value
+- [x] **2.** hand_value
 - [ ] **3.** blackjack_step
 - [ ] **4.** play_blackjack_episode
 - [ ] **5.** episode_returns

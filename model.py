@@ -15,8 +15,17 @@ def draw_card(rng):
     # Clip face cards (11, 12, 13) to 10 and return a plain Python int.
     return int(min(rank, 10))
 
-# Step 2 - hand_value (not yet solved)
-# TODO: implement
+# Step 2 - hand_value
+def hand_value(cards):
+    # Calculate the hand total with all aces initially counted as 1.
+    total = sum(cards)
+
+    # If the hand contains an ace, count one ace as 11 when it does not bust.
+    if 1 in cards and total + 10 <= 21:
+        return (int(total + 10), True)
+
+    # Otherwise, keep all aces counted as 1.
+    return (int(total), False)
 
 # Step 3 - blackjack_step (not yet solved)
 # TODO: implement
