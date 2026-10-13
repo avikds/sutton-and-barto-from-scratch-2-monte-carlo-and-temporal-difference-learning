@@ -27,7 +27,7 @@ python scaffold.py
 - [x] **15.** random_walk_rms_curve
 - [x] **16.** batch_td_prediction
 - [x] **17.** cliff_step
-- [ ] **18.** sarsa_cliff
+- [x] **18.** sarsa_cliff
 - [ ] **19.** q_learning_cliff
 - [ ] **20.** expected_sarsa_cliff
 - [ ] **21.** double_q_update
