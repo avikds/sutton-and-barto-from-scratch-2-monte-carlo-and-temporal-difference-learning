@@ -499,8 +499,38 @@ def batch_td_prediction(episodes, alpha, theta, gamma=1.0):
 
     return values
 
-# Step 17 - cliff_step (not yet solved)
-# TODO: implement
+# Step 17 - cliff_step
+def cliff_step(state, action):
+    # Convert the state index into its grid row and column.
+    row = state // 12
+    col = state % 12
+
+    # Apply the action: 0 = up, 1 = right, 2 = down, 3 = left.
+    if action == 0:
+        row -= 1
+    elif action == 1:
+        col += 1
+    elif action == 2:
+        row += 1
+    elif action == 3:
+        col -= 1
+
+    # If the move leaves the grid, keep the agent in its original state.
+    if row < 0 or row >= 4 or col < 0 or col >= 12:
+        next_state = state
+    else:
+        next_state = row * 12 + col
+
+    # Stepping onto the cliff sends the agent back to the start.
+    if 37 <= next_state <= 46:
+        return (36, -100.0, False)
+
+    # Reaching the goal terminates the episode.
+    if next_state == 47:
+        return (47, -1.0, True)
+
+    # Every other move incurs a reward of -1.0.
+    return (int(next_state), -1.0, False)
 
 # Step 18 - sarsa_cliff (not yet solved)
 # TODO: implement
