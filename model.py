@@ -125,8 +125,54 @@ def episode_returns(rewards, gamma=1.0):
 
     return returns
 
-# Step 6 - mc_prediction_blackjack (not yet solved)
-# TODO: implement
+# Step 6 - mc_prediction_blackjack
+def mc_prediction_blackjack(episodes, first_visit=True):
+    # Initialize value and visit-count tables.
+    # Indices: [player_sum - 12, dealer_showing - 1, int(usable_ace)]
+    values = np.zeros((10, 10, 2), dtype=float)
+    counts = np.zeros((10, 10, 2), dtype=float)
+
+    # Process each episode independently.
+    for episode in episodes:
+        if not episode:
+            continue
+
+        # Extract rewards and calculate undiscounted returns.
+        rewards = [transition[2] for transition in episode]
+        returns = episode_returns(rewards, gamma=1.0)
+
+        # Track visited states for first-visit Monte Carlo.
+        visited = set()
+
+        # Update each state's value using the incremental sample average.
+        for t, (state, action, reward) in enumerate(episode):
+            player_sum, dealer_showing, usable_ace = state
+
+            # Ignore states outside the supported value-table range.
+            if not (12 <= player_sum <= 21 and 1 <= dealer_showing <= 10):
+                continue
+
+            index = (
+                player_sum - 12,
+                dealer_showing - 1,
+                int(usable_ace)
+            )
+
+            # In first-visit MC, update a state only at its first occurrence.
+            if first_visit and index in visited:
+                continue
+
+            visited.add(index)
+
+            # Increment the number of returns observed for this state.
+            counts[index] += 1.0
+
+            # Incremental sample-average update.
+            values[index] += (
+                returns[t] - values[index]
+            ) / counts[index]
+
+    return values, counts
 
 # Step 7 - epsilon_soft_action (not yet solved)
 # TODO: implement
