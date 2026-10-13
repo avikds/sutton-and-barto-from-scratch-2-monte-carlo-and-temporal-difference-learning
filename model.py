@@ -174,8 +174,18 @@ def mc_prediction_blackjack(episodes, first_visit=True):
 
     return values, counts
 
-# Step 7 - epsilon_soft_action (not yet solved)
-# TODO: implement
+# Step 7 - epsilon_soft_action
+def epsilon_soft_action(q_values, epsilon, rng):
+    # Draw once to determine whether to explore or exploit.
+    u = rng.random()
+
+    if u < epsilon:
+        # Explore: choose an action uniformly at random.
+        return int(rng.integers(0, len(q_values)))
+
+    # Exploit: choose the greedy action.
+    # np.argmax selects the smallest index when values are tied.
+    return int(np.argmax(q_values))
 
 # Step 8 - mc_control_epsilon_soft (not yet solved)
 # TODO: implement
