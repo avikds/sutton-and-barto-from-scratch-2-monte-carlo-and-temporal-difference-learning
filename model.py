@@ -507,30 +507,27 @@ def cliff_step(state, action):
 
     # Apply the action: 0 = up, 1 = right, 2 = down, 3 = left.
     if action == 0:
-        row -= 1
+        row = max(0, row - 1)
     elif action == 1:
-        col += 1
+        col = min(11, col + 1)
     elif action == 2:
-        row += 1
+        row = min(3, row + 1)
     elif action == 3:
-        col -= 1
+        col = max(0, col - 1)
 
-    # If the move leaves the grid, keep the agent in its original state.
-    if row < 0 or row >= 4 or col < 0 or col >= 12:
-        next_state = state
-    else:
-        next_state = row * 12 + col
+    # Convert the new grid position back to a state index.
+    next_state = int(row * 12 + col)
 
-    # Stepping onto the cliff sends the agent back to the start.
-    if 37 <= next_state <= 46:
-        return (36, -100.0, False)
+    # Entering the cliff sends the agent back to the start.
+    if row == 3 and 1 <= col <= 10:
+        return 36, -100.0, False
 
-    # Reaching the goal terminates the episode.
+    # Reaching the goal ends the episode.
     if next_state == 47:
-        return (47, -1.0, True)
+        return 47, -1.0, True
 
-    # Every other move incurs a reward of -1.0.
-    return (int(next_state), -1.0, False)
+    # Every other move receives a reward of -1 and continues.
+    return next_state, -1.0, False
 
 # Step 18 - sarsa_cliff (not yet solved)
 # TODO: implement
