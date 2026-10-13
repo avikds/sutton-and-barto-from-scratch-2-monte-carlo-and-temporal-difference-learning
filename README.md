@@ -12,7 +12,7 @@ python scaffold.py
 
 - [x] **1.** draw_card
 - [x] **2.** hand_value
-- [ ] **3.** blackjack_step
+- [x] **3.** blackjack_step
 - [ ] **4.** play_blackjack_episode
 - [ ] **5.** episode_returns
 - [ ] **6.** mc_prediction_blackjack

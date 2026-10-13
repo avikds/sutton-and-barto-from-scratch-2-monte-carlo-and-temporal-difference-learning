@@ -27,8 +27,42 @@ def hand_value(cards):
     # Otherwise, keep all aces counted as 1.
     return (int(total), False)
 
-# Step 3 - blackjack_step (not yet solved)
-# TODO: implement
+# Step 3 - blackjack_step
+def blackjack_step(player_cards, dealer_cards, action, rng):
+    # Create new lists so the input hands are never modified.
+    player_cards = list(player_cards)
+    dealer_cards = list(dealer_cards)
+
+    # Action 1: Player hits and draws one card.
+    if action == 1:
+        player_cards.append(draw_card(rng))
+
+        player_total, _ = hand_value(player_cards)
+
+        # The player busts if the total exceeds 21.
+        if player_total > 21:
+            return player_cards, dealer_cards, -1.0, True
+
+        # The player can continue playing.
+        return player_cards, dealer_cards, 0.0, False
+
+    # Action 0: Player sticks, so the dealer plays.
+    while hand_value(dealer_cards)[0] < 17:
+        dealer_cards.append(draw_card(rng))
+
+    player_total, _ = hand_value(player_cards)
+    dealer_total, _ = hand_value(dealer_cards)
+
+    # Determine the outcome of the game.
+    if dealer_total > 21 or player_total > dealer_total:
+        reward = 1.0
+    elif player_total == dealer_total:
+        reward = 0.0
+    else:
+        reward = -1.0
+
+    # Sticking ends the episode.
+    return player_cards, dealer_cards, float(reward), True
 
 # Step 4 - play_blackjack_episode (not yet solved)
 # TODO: implement
