@@ -405,8 +405,24 @@ def td0_update(values, transitions, alpha, gamma=1.0):
 
     return updated_values
 
-# Step 14 - constant_alpha_mc_update (not yet solved)
-# TODO: implement
+# Step 14 - constant_alpha_mc_update
+def constant_alpha_mc_update(values, transitions, alpha, gamma=1.0):
+    # Create a copy so the original value table is not modified.
+    updated_values = np.array(values, dtype=float, copy=True)
+
+    # Extract rewards and compute the discounted return from every time step.
+    rewards = [reward for state, reward, next_state in transitions]
+    returns = episode_returns(rewards, gamma=gamma)
+
+    # Apply constant-alpha Monte Carlo updates for every visit,
+    # processing transitions in chronological order.
+    for t, (state, reward, next_state) in enumerate(transitions):
+        G = returns[t]
+
+        # Update the state's value toward the return from this time step.
+        updated_values[state] += alpha * (G - updated_values[state])
+
+    return updated_values
 
 # Step 15 - random_walk_rms_curve (not yet solved)
 # TODO: implement

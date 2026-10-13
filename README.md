@@ -23,7 +23,7 @@ python scaffold.py
 - [x] **11.** infinite_variance_returns
 - [x] **12.** random_walk_episode
 - [x] **13.** td0_update
-- [ ] **14.** constant_alpha_mc_update
+- [x] **14.** constant_alpha_mc_update
 - [ ] **15.** random_walk_rms_curve
 - [ ] **16.** batch_td_prediction
 - [ ] **17.** cliff_step
