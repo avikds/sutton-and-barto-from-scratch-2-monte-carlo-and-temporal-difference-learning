@@ -387,8 +387,23 @@ def random_walk_episode(rng):
 
     return episode
 
-# Step 13 - td0_update (not yet solved)
-# TODO: implement
+# Step 13 - td0_update
+def td0_update(values, transitions, alpha, gamma=1.0):
+    # Create a copy so the original value table remains unchanged.
+    updated_values = np.array(values, dtype=float, copy=True)
+
+    # Process transitions in chronological order, using the latest values.
+    for state, reward, next_state in transitions:
+        # Calculate the TD(0) target using the current next-state estimate.
+        target = reward + gamma * updated_values[next_state]
+
+        # Compute the temporal-difference error.
+        td_error = target - updated_values[state]
+
+        # Update the current state's value estimate.
+        updated_values[state] += alpha * td_error
+
+    return updated_values
 
 # Step 14 - constant_alpha_mc_update (not yet solved)
 # TODO: implement
